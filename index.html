@@ -1124,11 +1124,14 @@ function renderOverview() {
   const ag=curAG(), season=curSeason();
   const divs=getDivs(ag, season);
 
-  // Upcoming fixtures: scheduled fixtures with no result yet
+  // Upcoming fixtures: scheduled fixtures with no result yet, dated today or later
+  // (past-dated fixtures with no result are treated as postponed and hidden until rescheduled)
+  const today=new Date().toISOString().slice(0,10);
   const played=new Set(DB.results.filter(r=>r.ag===ag&&r.season===season)
     .map(r=>r.division+'|'+r.round+'|'+r.home+'|'+r.away));
   let upcoming=DB.fixtures.filter(f=>f.ag===ag&&f.season===season
-    && !played.has(f.division+'|'+f.round+'|'+f.home+'|'+f.away));
+    && !played.has(f.division+'|'+f.round+'|'+f.home+'|'+f.away)
+    && (!f.date || f.date>=today));
   upcoming.sort((a,b)=>(a.date||'9999').localeCompare(b.date||'9999')||a.round-b.round||a.division.localeCompare(b.division));
   upcoming=upcoming.slice(0,15);
 

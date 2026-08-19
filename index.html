@@ -177,38 +177,7 @@ tr:hover td{background:#f5faf5}
 
 <div id="sec-fixtures" class="section">
   <div class="filters">
-    <div class="form-row"><label>Division</label><select id="fix-div" onchange="fixDivLoad()"></select></div>
-  </div>
-  <div class="card">
-    <div class="card-title">&#9881;&#65039; Generate Fixtures</div>
-    <p style="font-size:12px;color:#555;margin-bottom:10px">Generate a round-robin schedule for the selected division. Replaces any existing fixtures for that division.</p>
-    <div class="r3">
-      <div class="form-row"><label>Start Date</label><input type="date" id="fix-start"></div>
-      <div class="form-row"><label>Days Between Rounds</label><input type="number" id="fix-interval" value="7" min="1"></div>
-      <div class="form-row"><label>Home &amp; Away?</label>
-        <select id="fix-ha"><option value="1">Yes (home &amp; away)</option><option value="0">No (one round only)</option></select>
-      </div>
-    </div>
-    <div style="display:flex;gap:8px;align-items:flex-end;margin-bottom:10px">
-      <div class="form-row" style="margin-bottom:0;flex:1;max-width:280px"><label>Fixture Seed (same seed &amp; teams = same fixtures)</label><input type="text" id="fix-seed" value="1"></div>
-      <button class="btn btn-sm" onclick="randomSeed()">&#127922; New random seed</button>
-    </div>
-    <div style="font-size:11px;color:#666;background:#f0f7f0;border:1px solid #d4e8d4;border-radius:6px;padding:8px 10px;margin-bottom:10px">
-      <strong>Breaks applied automatically:</strong> no fixtures from 22 Dec, resuming more than 7 days after 1 Jan; no fixtures on Easter weekend (Good Friday&ndash;Easter Monday). Team unavailable weekends (below) push just that team's match to the next free slot.
-    </div>
-    <button class="btn btn-primary" onclick="generateFixtures()">Generate (this division)</button>
-    <button class="btn" onclick="generateAllFixtures()">Generate for ALL divisions</button>
-    <span id="fix-gen-msg" style="margin-left:10px;font-size:12px;color:#1a5c2a"></span>
-  </div>
-  <div class="card">
-    <div class="card-title">&#128683; Team Unavailable Weekends</div>
-    <p style="font-size:12px;color:#555;margin-bottom:10px">Each team may pick up to 4 weekends it cannot play (for the division selected above). Set these <em>before</em> generating fixtures &mdash; affected matches move to the next available slot.</p>
-    <div style="display:grid;grid-template-columns:1fr 160px auto;gap:8px;align-items:end;margin-bottom:8px">
-      <div class="form-row" style="margin-bottom:0"><label>Team</label><select id="bl-team" onchange="renderBlackouts()"></select></div>
-      <div class="form-row" style="margin-bottom:0"><label>Unavailable weekend</label><input type="date" id="bl-date"></div>
-      <button class="btn btn-primary btn-sm" onclick="addBlackout()">Add</button>
-    </div>
-    <div id="bl-list"></div>
+    <div class="form-row"><label>Division</label><select id="fix-div" onchange="renderFixtures()"></select></div>
   </div>
   <div id="fixtures-out"></div>
 </div>
@@ -258,6 +227,38 @@ tr:hover td{background:#f5faf5}
         </div>
       </div>
     </div>
+  </div>
+  <div class="card">
+    <div class="card-title">&#9881;&#65039; Generate Fixtures</div>
+    <p style="font-size:12px;color:#555;margin-bottom:10px">Create a round-robin schedule for the current age group / season. Only needed if you're not importing fixtures from elsewhere. Replaces existing fixtures for the chosen division.</p>
+    <div class="form-row"><label>Division</label><select id="sf-div" onchange="setupFixLoad()"></select></div>
+    <div class="r3">
+      <div class="form-row"><label>Start Date</label><input type="date" id="fix-start"></div>
+      <div class="form-row"><label>Days Between Rounds</label><input type="number" id="fix-interval" value="7" min="1"></div>
+      <div class="form-row"><label>Home &amp; Away?</label>
+        <select id="fix-ha"><option value="1">Yes (home &amp; away)</option><option value="0">No (one round only)</option></select>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:flex-end;margin-bottom:10px">
+      <div class="form-row" style="margin-bottom:0;flex:1;max-width:280px"><label>Fixture Seed (same seed &amp; teams = same fixtures)</label><input type="text" id="fix-seed" value="1"></div>
+      <button class="btn btn-sm" onclick="randomSeed()">&#127922; New random seed</button>
+    </div>
+    <div style="font-size:11px;color:#666;background:#f0f7f0;border:1px solid #d4e8d4;border-radius:6px;padding:8px 10px;margin-bottom:10px">
+      <strong>Breaks applied automatically:</strong> no fixtures from 22 Dec, resuming more than 7 days after 1 Jan; no fixtures on Easter weekend (Good Friday&ndash;Easter Monday). Team unavailable weekends (below) push just that team's match to the next free slot.
+    </div>
+    <button class="btn btn-primary" onclick="generateFixtures()">Generate (this division)</button>
+    <button class="btn" onclick="generateAllFixtures()">Generate for ALL divisions</button>
+    <span id="fix-gen-msg" style="margin-left:10px;font-size:12px;color:#1a5c2a"></span>
+  </div>
+  <div class="card">
+    <div class="card-title">&#128683; Team Unavailable Weekends</div>
+    <p style="font-size:12px;color:#555;margin-bottom:10px">Each team may pick up to 4 weekends it cannot play (for the division selected above). Set these <em>before</em> generating fixtures &mdash; affected matches move to the next available slot.</p>
+    <div style="display:grid;grid-template-columns:1fr 160px auto;gap:8px;align-items:end;margin-bottom:8px">
+      <div class="form-row" style="margin-bottom:0"><label>Team</label><select id="bl-team" onchange="renderBlackouts()"></select></div>
+      <div class="form-row" style="margin-bottom:0"><label>Unavailable weekend</label><input type="date" id="bl-date"></div>
+      <button class="btn btn-primary btn-sm" onclick="addBlackout()">Add</button>
+    </div>
+    <div id="bl-list"></div>
   </div>
   <div class="card">
     <div class="card-title">&#9989; Data Check</div>
@@ -679,13 +680,17 @@ function entTeamLoad() {
 }
 function fixDivLoad() {
   setOptions(document.getElementById('fix-div'), getDivs(curAG(), curSeason()));
-  const div=document.getElementById('fix-div').value;
+  renderFixtures();
+}
+// Setup > Generate Fixtures & Unavailability (uses its own sf-div division selector)
+function setupFixLoad() {
+  const sf=document.getElementById('sf-div');
+  setOptions(sf, getDivs(curAG(), curSeason()));
+  const div=sf.value;
   setOptions(document.getElementById('bl-team'), DB.teams[teamKey(curAG(),curSeason(),div)]||[]);
-  // Load the saved fixture seed for this age group / season
   const savedSeed=DB.fixtureSeeds[curAG()+'|'+curSeason()];
   document.getElementById('fix-seed').value = savedSeed!==undefined ? savedSeed : '1';
   renderBlackouts();
-  renderFixtures();
 }
 function randomSeed(){
   document.getElementById('fix-seed').value = String(Math.floor(Math.random()*1e9));
@@ -927,7 +932,7 @@ function quickEntry(ag,season,div,round,home,away,date) {
 }
 
 function generateFixtures() {
-  const ag=curAG(), season=curSeason(), div=document.getElementById('fix-div').value;
+  const ag=curAG(), season=curSeason(), div=document.getElementById('sf-div').value;
   const startDate=document.getElementById('fix-start').value, interval=parseInt(document.getElementById('fix-interval').value)||7;
   const homeAway=document.getElementById('fix-ha').value==='1';
   const seedStr=(document.getElementById('fix-seed').value||'1').trim();
@@ -1190,6 +1195,7 @@ function renderSetup() {
   setOptions(document.getElementById('setup-team-ag'),DB.ageGroups);
   setOptions(document.getElementById('setup-team-season'),DB.seasons);
   const dm=document.getElementById('dm-season'); if(dm) dm.textContent=curSeason();
+  setupFixLoad();
   renderSetupDivs();
 }
 

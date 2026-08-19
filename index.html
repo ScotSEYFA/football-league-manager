@@ -104,7 +104,7 @@ tr:hover td{background:#f5faf5}
 </div>
 <div class="globalbar">
   <div class="gb-field"><label>Age Group</label><select id="g-ag" onchange="globalAGChange()"></select></div>
-  <div class="gb-field"><label>Season</label><select id="g-season" onchange="globalChange()"></select>
+  <div class="gb-field"><label>Season</label><select id="g-season" onchange="globalSeasonChange()"></select>
     <button class="btn btn-sm" style="padding:4px 9px" onclick="newSeasonPrompt()" title="Add a new season">+ New Season</button>
   </div>
 </div>
@@ -523,6 +523,25 @@ function updateHeader(){
 
 // Global Age Group / Season change re-renders the active section
 function globalChange(){ updateHeader(); SECTION_LOADERS[activeSection] && SECTION_LOADERS[activeSection](); }
+
+// Following the same cohort: changing season shifts the age group by the year difference
+// (older season -> younger age group, newer season -> older), clamped to the available age groups.
+let lastSeason = null;
+function seasonYear(s){ const m=String(s||'').match(/\d{4}/); return m?parseInt(m[0]):0; }
+function globalSeasonChange(){
+  const gs=document.getElementById('g-season'), ga=document.getElementById('g-ag');
+  const newSeason=gs.value;
+  if(lastSeason && lastSeason!==newSeason){
+    const delta=seasonYear(newSeason)-seasonYear(lastSeason);
+    if(delta!==0){
+      const ags=[...DB.ageGroups].sort((a,b)=>agNum(a)-agNum(b));
+      const i=ags.indexOf(ga.value);
+      if(i>=0){ const ni=Math.max(0, Math.min(ags.length-1, i+delta)); ga.value=ags[ni]; }
+    }
+  }
+  lastSeason=newSeason;
+  globalChange();
+}
 function globalAGChange(){
   // divisions depend on age group; refresh then re-render
   globalChange();
@@ -1523,6 +1542,7 @@ populateGlobal();
   if(DB.seasons.length) gs.value=DB.seasons[DB.seasons.length-1];
   const ga=document.getElementById('g-ag');
   ga.value = DB.ageGroups.includes('Under 15') ? 'Under 15' : (DB.ageGroups[0]||'');
+  lastSeason = gs.value;
 })();
 renderOverview();
 

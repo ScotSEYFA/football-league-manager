@@ -1,0 +1,5 @@
+# Only the deployable app is tracked; source/build files stay local
+*
+!index.html
+!.gitignore
+!README.md

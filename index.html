@@ -308,7 +308,7 @@ const SEED_U15_2526_FORCECOMET = [["Division 1", "East Calder CFC", "Broxburn At
 const SEED_U15_2627_SCORERS = [["Division 3B", "Cramond Lions Football Club", "Preston Athletic YFC Colts", "Nathan Bonneau:15|Harrison Knox:29", ""], ["Division 3B", "Edinburgh City Reds", "North Berwick FC Town", "", ""], ["Division 3B", "Edinburgh South CFC Rams", "Murieston United Blues", "", ""], ["Division 3B", "Edinburgh United Youth FC Whites", "Longniddry Villa", "Daniel Clark:7|Blair Blackie:39|Logan Watson:57", "Miller MacKay:3,17,29,43|Harry Fitzpatrick:5|Jack Malinen:10|Ben Thomson:36|Lewis Bisset:46"], ["Division 3B", "Haddington Athletic CFC", "Lochend Football Academy Reds", "Danny Scougal:8,15", "Alex Wotherspoon:32|Bruno Strachura:34|Tyler Long:44,61,64|Dmytro Obeda:62"], ["Division 3B", "Inverkeithing Hillfield Swifts Lightning", "KSQ Rapids", "Layton Blackley:4|Lleyton Reilly:28|Ritchie Bower:47", ""], ["Division 3B", "KSQ Rapids", "Murieston United Blues", "Robbie Lawson:59", "Thomas Ritchie:3,27,79|Kerr MacNeish:7,17,22,57|Andrew Kay:34|Conor Keogh:61"], ["Division 3B", "Edinburgh South CFC Rams", "Preston Athletic YFC Colts", "Bryce Dormido:2,11,30,49|MASON WILLIAM STEVENSON:7|Cairn Lake:40|AARON GRAY:57", ""], ["Division 3B", "Inverkeithing Hillfield Swifts Lightning", "Cramond Lions Football Club", "Lleyton Reilly:6|Ritchie Bower:50|Layton Blackley:80", ""], ["Division 3B", "Longniddry Villa", "Penicuik Athletic YFC Blues", "", ""], ["Division 3B", "Edina Hibs", "Penicuik Athletic YFC Blues", "Aaron Gallagher:60|Anoop Singh:62", ""], ["Division 3B", "Lochend Football Academy Reds", "Edina Hibs", "", ""]];
 
 
-const STORE_KEY = 'flm_v34';
+const STORE_KEY = 'flm_v35';
 
 const STD_DIVS = ['Division 1','Division 2A','Division 2B','Division 3A','Division 3B','Division 4A','Division 4B'];
 const STD_AGES = ['Under 13','Under 14','Under 15','Under 16','Under 17','Under 18'];
@@ -885,8 +885,8 @@ function renderResults() {
       const line=arr=>(arr||[]).map(p=>`${esc(p.name)}${p.mins&&p.mins.length?` <span style="color:#888">${p.mins.map(x=>x+"'").join(', ')}</span>`:''}`).join('<br>')||'<span style="color:#aaa">—</span>';
       h+=`<div id="md-${r.id}" style="display:none;padding:4px 4px 10px 58px;font-size:12px">
         <div style="display:flex;gap:24px">
-          <div style="flex:1">${line(r.scorers.home)}</div>
-          <div style="flex:1">${line(r.scorers.away)}</div>
+          <div style="flex:1;text-align:right">${line(r.scorers.home)}</div>
+          <div style="flex:1;text-align:left">${line(r.scorers.away)}</div>
         </div></div>`;
     }
     if(r.autoComment || r.comment){

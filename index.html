@@ -323,7 +323,7 @@ const SEED_U18_2627_SCORERS = [["Division 1", "KSQ Rapids", "Inverkeithing Hillf
 const SEED_U18_2627_NEWTEAMS = {"Division 1": ["North Merchiston FC"]};
 
 
-const STORE_KEY = 'flm_v43';
+const STORE_KEY = 'flm_v44';
 
 const STD_DIVS = ['Division 1','Division 2A','Division 2B','Division 3A','Division 3B','Division 4A','Division 4B'];
 const STD_AGES = ['Under 13','Under 14','Under 15','Under 16','Under 17','Under 18'];
@@ -685,6 +685,25 @@ function seedData() {
     for(const k of Object.keys(DB.teams)){ if(k.startsWith(AG+'|'+s+'|')) DB.teams[k].sort((a,b)=>a.localeCompare(b)); }
     if(SC){ const dec=str=> (str||'').split('|').filter(Boolean).map(p=>{ const [name,mins]=p.split(':'); return {name, mins:(mins||'').split(',').filter(Boolean).map(Number)}; });
       for (const r of SC){ const m=findMatch(AG,s,r[0],r[1],r[2]); if(m){ const h=dec(r[3]), a=dec(r[4]); if(h.length||a.length) m.scorers={home:h, away:a}; } } }
+  }
+  // ===== Durable team-name merges: same club recorded under two names in one division =====
+  // [ag, season, division, fromName, toName]  — fromName's results/fixtures/roster fold into toName.
+  const TEAM_MERGES = [
+    ['Under 15','2026 / 2027','Division 2B','Leith Athletic','Leith Athletic FC'],
+  ];
+  for (const [ag,season,div,fromT,toT] of TEAM_MERGES){
+    for(const r of DB.results){ if(r.ag===ag&&r.season===season&&r.division===div){ if(r.home===fromT) r.home=toT; if(r.away===fromT) r.away=toT; } }
+    const seen={};
+    DB.results=DB.results.filter(r=>{
+      if(!(r.ag===ag&&r.season===season&&r.division===div)) return true;
+      if(r.home===r.away) return false;
+      const k=matchKey(r);
+      if(seen[k]){ const ex=seen[k]; for(const src in r.sources){ if(!ex.sources[src]) ex.sources[src]=r.sources[src]; } if(r.scorers&&!ex.scorers) ex.scorers=r.scorers; applyChoice(ex); return false; }
+      seen[k]=r; return true;
+    });
+    for(const f of DB.fixtures){ if(f.ag===ag&&f.season===season&&f.division===div){ if(f.home===fromT) f.home=toT; if(f.away===fromT) f.away=toT; } }
+    const key=teamKey(ag,season,div);
+    if(DB.teams[key]){ DB.teams[key]=DB.teams[key].filter(t=>t!==fromT); if(!DB.teams[key].includes(toT)) DB.teams[key].push(toT); DB.teams[key].sort((a,b)=>a.localeCompare(b)); }
   }
 }
 

@@ -54,7 +54,7 @@ tr:hover td{background:#f5faf5}
 .fix-away{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .fix-score{min-width:58px;text-align:center;font-weight:700;font-size:14px}
 .fix-date{font-size:11px;color:#888;white-space:nowrap;min-width:68px}
-.fix-rowdate{width:60px;flex-shrink:0;text-align:right;font-size:10px;color:#999;white-space:nowrap}
+.fix-rowdate{width:56px;flex-shrink:0;text-align:left;font-size:11px;color:#888;white-space:nowrap}
 .div-badge{font-size:10px;color:#888;background:#f0f0f0;border-radius:3px;padding:2px 5px;flex-shrink:0;min-width:50px;text-align:center}
 .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
 .stat-card{background:#f0f7f0;border:1px solid #d4e8d4;border-radius:8px;padding:12px;text-align:center}
@@ -330,7 +330,7 @@ const SEED_U17_2627_WEBSITE = [["Division 1", "Musselburgh Windsor F C", "Edinbu
 const SEED_U18_2627_WEBSITE = [["Division 1", "Penicuik Athletic F.C.", "North Berwick FC", 0, 1, "2026-08-15"], ["Division 1", "Spartans FC Youth Blues", "KSQ Rapids", 5, 0, "2026-08-15"], ["Division 1", "Spartans FC Youth", "KSQ Galaxy", 1, 1, "2026-08-15"], ["Division 1", "Tranent FC", "Inverkeithing Hillfield Swifts", 3, 2, "2026-08-15"], ["Division 1", "Bonnyrigg Rose", "Edinburgh South CFC Reds", 9, 1, "2026-08-15"], ["Division 1", "Broxburn Athletic Colts", "Edinburgh South Community CFC", 2, 4, "2026-08-15"], ["Division 1", "Corstorphine Dynamo FC Blacks", "Easthouses Lily", 2, 2, "2026-08-15"], ["Division 1", "Currie Star F C Whites", "Dalkeith Thistle C F C", 3, 6, "2026-08-15"]];
 
 
-const STORE_KEY = 'flm_v49';
+const STORE_KEY = 'flm_v50';
 
 const STD_DIVS = ['Division 1','Division 2A','Division 2B','Division 3A','Division 3B','Division 4A','Division 4B'];
 const STD_AGES = ['Under 13','Under 14','Under 15','Under 16','Under 17','Under 18'];
@@ -1049,14 +1049,13 @@ function renderResults() {
   filtered.sort((a,b)=>a.round-b.round||a.date.localeCompare(b.date));
   const out=document.getElementById('results-out');
   if(!filtered.length){out.innerHTML='<div class="empty">No results found.</div>';return;}
-  let curGw=null, curGwDate=null, h='<div class="fix-list">';
+  let curGw=null, h='<div class="fix-list">';
   for(const r of filtered){
     if(r.round!==curGw){
-      curGw=r.round; curGwDate=r.date;
-      h+=`<div class="fix-gw-hdr">Round ${r.round}${r.date?' &middot; '+fmtDate(r.date):''}</div>`;
+      curGw=r.round;
+      h+=`<div class="fix-gw-hdr">Round ${r.round}</div>`;
     }
-    const showDate = r.date && r.date!==curGwDate;
-    const rowDate = `<span class="fix-rowdate" title="${showDate?'Played '+fmtDate(r.date):''}">${showDate?fmtDate(r.date):''}</span>`;
+    const rowDate = `<span class="fix-rowdate">${r.date?fmtDate(r.date):''}</span>`;
     const hw=r.hg>r.awg, aw=r.awg>r.hg;
     const avail=Object.keys(r.sources||{});
     const chosen=r.chosen||'Manual';
@@ -1071,6 +1070,7 @@ function renderResults() {
     const hasDet=!!(r.scorers && ((r.scorers.home&&r.scorers.home.length)||(r.scorers.away&&r.scorers.away.length)));
     const ball=hasDet?`<span title="Goalscorers available — click row to view" style="font-size:12px">&#9917;</span>`:`<span style="width:12px;display:inline-block"></span>`;
     h+=`<div class="fix-row" ${hasDet?`onclick="toggleMatchDetail(${r.id})" style="cursor:pointer"`:''}>
+      ${rowDate}
       <span class="div-badge">${esc(r.division.replace('Division ','Div '))}</span>
       <span class="fix-home" style="font-weight:${hw?700:400}">${esc(r.home)}</span>
       <span class="fix-score" style="color:${hw||aw?'#1a5c2a':'#888'}">${r.hg} - ${r.awg}</span>
@@ -1078,7 +1078,6 @@ function renderResults() {
       ${ball}
       ${badge}
       <span class="tag ${hw?'tag-w':aw?'tag-l':'tag-d'}">${hw?'H':aw?'A':'D'}</span>
-      ${rowDate}
       <button class="del-btn" onclick="event.stopPropagation();deleteResult(${r.id},this)">&#10005;</button>
     </div>`;
     if(hasDet){

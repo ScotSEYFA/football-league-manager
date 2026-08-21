@@ -330,7 +330,7 @@ const SEED_U17_2627_WEBSITE = [["Division 1", "Musselburgh Windsor F C", "Edinbu
 const SEED_U18_2627_WEBSITE = [["Division 1", "Penicuik Athletic F.C.", "North Berwick FC", 0, 1, "2026-08-15"], ["Division 1", "Spartans FC Youth Blues", "KSQ Rapids", 5, 0, "2026-08-15"], ["Division 1", "Spartans FC Youth", "KSQ Galaxy", 1, 1, "2026-08-15"], ["Division 1", "Tranent FC", "Inverkeithing Hillfield Swifts", 3, 2, "2026-08-15"], ["Division 1", "Bonnyrigg Rose", "Edinburgh South CFC Reds", 9, 1, "2026-08-15"], ["Division 1", "Broxburn Athletic Colts", "Edinburgh South Community CFC", 2, 4, "2026-08-15"], ["Division 1", "Corstorphine Dynamo FC Blacks", "Easthouses Lily", 2, 2, "2026-08-15"], ["Division 1", "Currie Star F C Whites", "Dalkeith Thistle C F C", 3, 6, "2026-08-15"]];
 
 
-const STORE_KEY = 'flm_v50';
+const STORE_KEY = 'flm_v51';
 
 const STD_DIVS = ['Division 1','Division 2A','Division 2B','Division 3A','Division 3B','Division 4A','Division 4B'];
 const STD_AGES = ['Under 13','Under 14','Under 15','Under 16','Under 17','Under 18'];
@@ -1084,6 +1084,7 @@ function renderResults() {
       const line=arr=>(arr||[]).map(p=>`${esc(p.name)}${p.mins&&p.mins.length?` <span style="color:#888">${p.mins.map(x=>x+"'").join(', ')}</span>`:''}`).join('<br>')||'<span style="color:#aaa">—</span>';
       h+=`<div id="md-${r.id}" style="display:none;font-size:12px;color:#555">
         <div style="display:flex;align-items:flex-start;gap:8px;padding:2px 4px 10px">
+          <div style="width:56px;flex-shrink:0"></div>
           <div style="min-width:50px;flex-shrink:0"></div>
           <div style="flex:1;text-align:right">${line(r.scorers.home)}</div>
           <div style="min-width:58px;flex-shrink:0"></div>

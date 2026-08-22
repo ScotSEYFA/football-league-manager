@@ -1162,7 +1162,12 @@ const SEED_U16_2526_SCORERS = [
 ];
 
 
-const STORE_KEY = 'flm_v60';
+const SEED_MANUAL_OVERRIDES = [
+  ["Under 14","2025 / 2026","Division 3B","Edinburgh South Rams","Leith Athletic FC",1,4,"2026-04-26",true]
+];
+
+
+const STORE_KEY = 'flm_v61';
 
 const STD_DIVS = ['Division 1','Division 2A','Division 2B','Division 3A','Division 3B','Division 4A','Division 4B'];
 const STD_AGES = ['Under 13','Under 14','Under 15','Under 16','Under 17','Under 18'];
@@ -1631,6 +1636,20 @@ function seedData() {
     for(const f of DB.fixtures){ if(f.ag===ag&&f.season===season&&f.division===div){ if(f.home===fromT) f.home=toT; if(f.away===fromT) f.away=toT; } }
     const key=teamKey(ag,season,div);
     if(DB.teams[key]){ DB.teams[key]=DB.teams[key].filter(t=>t!==fromT); if(!DB.teams[key].includes(toT)) DB.teams[key].push(toT); DB.teams[key].sort((a,b)=>a.localeCompare(b)); }
+  }
+  // ===== Manual result overrides (hand-entered corrections; Manual wins precedence) =====
+  // [ag, season, division, home, away, hg, awg, date, clearScorers]  — runs last so it's authoritative.
+  if (typeof SEED_MANUAL_OVERRIDES !== 'undefined') {
+    for (const r of SEED_MANUAL_OVERRIDES) {
+      let m=findMatch(r[0],r[1],r[2],r[3],r[4]);
+      if(!m){ m={id:DB.nextId++,ag:r[0],season:r[1],division:r[2],round:1,date:r[7]||'',home:r[3],away:r[4],sources:{},chosen:'Manual',comment:'',autoComment:''}; DB.results.push(m);
+        const key=teamKey(r[0],r[1],r[2]); if(!DB.teams[key]) DB.teams[key]=[]; for(const t of [r[3],r[4]]) if(!DB.teams[key].includes(t)) DB.teams[key].push(t); }
+      m.sources['Manual']={hg:r[5],awg:r[6]};
+      if(r[7]) m.date=r[7];
+      if(r[8]) delete m.scorers;
+      m.userChosen=false;   // Manual wins via autoChoose; leave unpinned
+      applyChoice(m);
+    }
   }
 }
 

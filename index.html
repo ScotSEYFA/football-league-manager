@@ -336,7 +336,7 @@ const SEED_2627_NEWGAMES = [["Under 13", "Division 1A", "Craigroyston CYFC Yello
 const SEED_2627_NEWGAME_SCORERS = [["Under 13", "Division 1A", "Craigroyston CYFC Yellow", "Inverkeithing Hillfield Swifts", "Ollie Rutherford:11|Charlie Duffin:14|Blair Weatherston:21,42", "Calum Watson:44"], ["Under 13", "Division 2A", "Cramond FC", "Tynecastle F C Maroons", "Archie Macintosh:55|HENRY WILD:57", "Jude Barnes:3,10|Kerr Stuart:19|Theo Roberts:35|Logan Gilbey:65|Harry Ramsay:67"], ["Under 13", "Division 3A", "North Merchiston FC Whites", "Inverkeithing Hillfield Swifts Gunners", "Kristopher Geddes:42", "Weston James:33|Charlie Bruce:44|Callum Moffat:65"], ["Under 13", "Division 3B", "Edina Hibs Greens", "Musselburgh Windsor FC Blues", "Patrick Murphy:19|Gabriel Kara:47|Mohammad Qasim Ali:54", "Reyan Kelly:35|Douglas Mitchell:57,61,65"], ["Under 13", "Division 4B", "KSQ Rapids", "Leith Athletic Reds", "Robbie Findlay:41,48", "Eoin Barklie:18|Omar Ahmed:45"], ["Under 15", "Division 1", "Hutchison Vale FC Blacks", "Edinburgh City FC", "Oliver Brown:63", "Stewart Bennett:25,48|Caleb Gilchrist:28"], ["Under 15", "Division 3B", "Edinburgh United Youth FC Whites", "Edinburgh City Reds", "Anas Mustafa:41|Daniel Clark:59", "Leon Darling:38|Riley John Baillie:49|Sandy Lewis:52"]];
 
 
-const STORE_KEY = 'flm_v57';
+const STORE_KEY = 'flm_v58';
 
 const STD_DIVS = ['Division 1','Division 2A','Division 2B','Division 3A','Division 3B','Division 4A','Division 4B'];
 const STD_AGES = ['Under 13','Under 14','Under 15','Under 16','Under 17','Under 18'];
@@ -575,7 +575,7 @@ function seedData() {
   // SEED_U15_2627_SCORERS = [ [division,home,away,homeEnc,awayEnc], ... ]  enc = "Name:m,m|Name:m"
   if (typeof SEED_U15_2627_SCORERS !== 'undefined') {
     const s='2026 / 2027';
-    const dec=str=> (str||'').split('|').filter(Boolean).map(p=>{ const [name,mins]=p.split(':'); return {name, mins:(mins||'').split(',').filter(Boolean).map(Number)}; });
+    const dec=str=> (str||'').split('|').filter(Boolean).map(p=>{ const [name,mins]=p.split(':'); return {name:normName(name), mins:(mins||'').split(',').filter(Boolean).map(Number)}; });
     for (const r of SEED_U15_2627_SCORERS) {
       const m=findMatch('Under 15',s,r[0],r[1],r[2]);
       if(m){ const h=dec(r[3]), a=dec(r[4]); if(h.length||a.length) m.scorers={home:h, away:a}; }
@@ -607,7 +607,7 @@ function seedData() {
   }
   if (typeof SEED_U14_2627_SCORERS !== 'undefined') {
     const s='2026 / 2027';
-    const dec=str=> (str||'').split('|').filter(Boolean).map(p=>{ const [name,mins]=p.split(':'); return {name, mins:(mins||'').split(',').filter(Boolean).map(Number)}; });
+    const dec=str=> (str||'').split('|').filter(Boolean).map(p=>{ const [name,mins]=p.split(':'); return {name:normName(name), mins:(mins||'').split(',').filter(Boolean).map(Number)}; });
     for (const r of SEED_U14_2627_SCORERS) {
       const m=findMatch('Under 14',s,r[0],r[1],r[2]);
       if(m){ const h=dec(r[3]), a=dec(r[4]); if(h.length||a.length) m.scorers={home:h, away:a}; }
@@ -639,7 +639,7 @@ function seedData() {
   }
   if (typeof SEED_U16_2627_SCORERS !== 'undefined') {
     const s='2026 / 2027';
-    const dec=str=> (str||'').split('|').filter(Boolean).map(p=>{ const [name,mins]=p.split(':'); return {name, mins:(mins||'').split(',').filter(Boolean).map(Number)}; });
+    const dec=str=> (str||'').split('|').filter(Boolean).map(p=>{ const [name,mins]=p.split(':'); return {name:normName(name), mins:(mins||'').split(',').filter(Boolean).map(Number)}; });
     for (const r of SEED_U16_2627_SCORERS) {
       const m=findMatch('Under 16',s,r[0],r[1],r[2]);
       if(m){ const h=dec(r[3]), a=dec(r[4]); if(h.length||a.length) m.scorers={home:h, away:a}; }
@@ -671,7 +671,7 @@ function seedData() {
   }
   if (typeof SEED_U13_2627_SCORERS !== 'undefined') {
     const s='2026 / 2027';
-    const dec=str=> (str||'').split('|').filter(Boolean).map(p=>{ const [name,mins]=p.split(':'); return {name, mins:(mins||'').split(',').filter(Boolean).map(Number)}; });
+    const dec=str=> (str||'').split('|').filter(Boolean).map(p=>{ const [name,mins]=p.split(':'); return {name:normName(name), mins:(mins||'').split(',').filter(Boolean).map(Number)}; });
     for (const r of SEED_U13_2627_SCORERS) {
       const m=findMatch('Under 13',s,r[0],r[1],r[2]);
       if(m){ const h=dec(r[3]), a=dec(r[4]); if(h.length||a.length) m.scorers={home:h, away:a}; }
@@ -696,13 +696,13 @@ function seedData() {
       m.chosen='Comet'; applyChoice(m);
     }
     for(const k of Object.keys(DB.teams)){ if(k.startsWith(AG+'|'+s+'|')) DB.teams[k].sort((a,b)=>a.localeCompare(b)); }
-    if(SC){ const dec=str=> (str||'').split('|').filter(Boolean).map(p=>{ const [name,mins]=p.split(':'); return {name, mins:(mins||'').split(',').filter(Boolean).map(Number)}; });
+    if(SC){ const dec=str=> (str||'').split('|').filter(Boolean).map(p=>{ const [name,mins]=p.split(':'); return {name:normName(name), mins:(mins||'').split(',').filter(Boolean).map(Number)}; });
       for (const r of SC){ const m=findMatch(AG,s,r[0],r[1],r[2]); if(m){ const h=dec(r[3]), a=dec(r[4]); if(h.length||a.length) m.scorers={home:h, away:a}; } } }
   }
   // ===== U14 (2012s) 2025/26 goalscorers from Comet, Division 3B =====
   if (typeof SEED_U14_2526_D3B_SCORERS !== 'undefined') {
     const s='2025 / 2026';
-    const dec=str=> (str||'').split('|').filter(Boolean).map(p=>{ const [name,mins]=p.split(':'); return {name, mins:(mins||'').split(',').filter(Boolean).map(Number)}; });
+    const dec=str=> (str||'').split('|').filter(Boolean).map(p=>{ const [name,mins]=p.split(':'); return {name:normName(name), mins:(mins||'').split(',').filter(Boolean).map(Number)}; });
     for (const r of SEED_U14_2526_D3B_SCORERS) { // [div,home,away,hEnc,aEnc]
       const m=findMatch('Under 14',s,r[0],r[1],r[2]);
       if(m){ const h=dec(r[3]), a=dec(r[4]); if(h.length||a.length) m.scorers={home:h, away:a}; }
@@ -728,7 +728,7 @@ function seedData() {
   }
   if (typeof SEED_2627_NEWGAME_SCORERS !== 'undefined') {
     const s='2026 / 2027';
-    const dec=str=> (str||'').split('|').filter(Boolean).map(p=>{ const [name,mins]=p.split(':'); return {name, mins:(mins||'').split(',').filter(Boolean).map(Number)}; });
+    const dec=str=> (str||'').split('|').filter(Boolean).map(p=>{ const [name,mins]=p.split(':'); return {name:normName(name), mins:(mins||'').split(',').filter(Boolean).map(Number)}; });
     for (const r of SEED_2627_NEWGAME_SCORERS) { // [ag,div,home,away,hEnc,aEnc]
       const m=findMatch(r[0],s,r[1],r[2],r[3]);
       if(m){ const h=dec(r[4]), a=dec(r[5]); if(h.length||a.length) m.scorers={home:h, away:a}; }
@@ -876,6 +876,21 @@ function canonSource(s){
 }
 function srcLetter(s){ return s ? s[0].toUpperCase() : '?'; }
 function matchKey(r){ return [r.ag,r.season,r.division,r.home,r.away].join('||'); }
+// Goalscorer name display format: "FirstName Surname" (first + last token, drop middle names),
+// Title-cased. A token that already carries an internal capital on Comet (MacKay, McIntosh,
+// O'Keefe-Boyd) is kept verbatim; ALL-CAPS or all-lowercase tokens are Title-cased
+// (MASON WILLIAM STEVENSON -> Mason Stevenson, conor young -> Conor Young).
+function fixCase(tok){
+  if(/[a-z]/.test(tok) && /[A-Z]/.test(tok.slice(1))) return tok; // has an internal capital -> trust Comet
+  return tok.toLowerCase().replace(/(^[a-z])|([-'’][a-z])/g, m=>m.toUpperCase());
+}
+function normName(full){
+  if(!full) return full;
+  const toks=String(full).trim().split(/\s+/).filter(Boolean);
+  if(!toks.length) return full;
+  const pick = toks.length===1 ? [toks[0]] : [toks[0], toks[toks.length-1]];
+  return pick.map(fixCase).join(' ');
+}
 
 // Set chosen score from precedence and build a discrepancy note
 // Automatic source precedence (unless the user has manually pinned a choice):

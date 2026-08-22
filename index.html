@@ -336,7 +336,7 @@ const SEED_2627_NEWGAMES = [["Under 13", "Division 1A", "Craigroyston CYFC Yello
 const SEED_2627_NEWGAME_SCORERS = [["Under 13", "Division 1A", "Craigroyston CYFC Yellow", "Inverkeithing Hillfield Swifts", "Ollie Rutherford:11|Charlie Duffin:14|Blair Weatherston:21,42", "Calum Watson:44"], ["Under 13", "Division 2A", "Cramond FC", "Tynecastle F C Maroons", "Archie Macintosh:55|HENRY WILD:57", "Jude Barnes:3,10|Kerr Stuart:19|Theo Roberts:35|Logan Gilbey:65|Harry Ramsay:67"], ["Under 13", "Division 3A", "North Merchiston FC Whites", "Inverkeithing Hillfield Swifts Gunners", "Kristopher Geddes:42", "Weston James:33|Charlie Bruce:44|Callum Moffat:65"], ["Under 13", "Division 3B", "Edina Hibs Greens", "Musselburgh Windsor FC Blues", "Patrick Murphy:19|Gabriel Kara:47|Mohammad Qasim Ali:54", "Reyan Kelly:35|Douglas Mitchell:57,61,65"], ["Under 13", "Division 4B", "KSQ Rapids", "Leith Athletic Reds", "Robbie Findlay:41,48", "Eoin Barklie:18|Omar Ahmed:45"], ["Under 15", "Division 1", "Hutchison Vale FC Blacks", "Edinburgh City FC", "Oliver Brown:63", "Stewart Bennett:25,48|Caleb Gilchrist:28"], ["Under 15", "Division 3B", "Edinburgh United Youth FC Whites", "Edinburgh City Reds", "Anas Mustafa:41|Daniel Clark:59", "Leon Darling:38|Riley John Baillie:49|Sandy Lewis:52"]];
 
 
-const STORE_KEY = 'flm_v58';
+const STORE_KEY = 'flm_v59';
 
 const STD_DIVS = ['Division 1','Division 2A','Division 2B','Division 3A','Division 3B','Division 4A','Division 4B'];
 const STD_AGES = ['Under 13','Under 14','Under 15','Under 16','Under 17','Under 18'];
@@ -884,12 +884,15 @@ function fixCase(tok){
   if(/[a-z]/.test(tok) && /[A-Z]/.test(tok.slice(1))) return tok; // has an internal capital -> trust Comet
   return tok.toLowerCase().replace(/(^[a-z])|([-'’][a-z])/g, m=>m.toUpperCase());
 }
+// Surname prefixes ("nobiliary particles") that belong to the surname, not middle names,
+// so "Reuben Van Der Merwe" -> "Reuben Van Der Merwe" and "Leonardo De Gaetano" stays intact.
+const NAME_PARTICLES={van:1,von:1,der:1,den:1,de:1,del:1,della:1,di:1,da:1,dos:1,du:1,le:1,la:1,ter:1,ten:1};
 function normName(full){
-  if(!full) return full;
-  const toks=String(full).trim().split(/\s+/).filter(Boolean);
-  if(!toks.length) return full;
-  const pick = toks.length===1 ? [toks[0]] : [toks[0], toks[toks.length-1]];
-  return pick.map(fixCase).join(' ');
+  const toks=String(full||'').trim().split(/\s+/).filter(Boolean);
+  if(toks.length<=1) return toks.length ? fixCase(toks[0]) : full;
+  let i=toks.length-1; // surname starts at the last token, then absorb any preceding particles
+  while(i-1>=1 && NAME_PARTICLES[toks[i-1].toLowerCase().replace(/[^a-z]/g,'')]) i--;
+  return [toks[0]].concat(toks.slice(i)).map(fixCase).join(' ');
 }
 
 // Set chosen score from precedence and build a discrepancy note

@@ -2039,12 +2039,16 @@ function renderResults() {
   if(div && div!=='(All)') sharedDiv=div;
   let filtered=DB.results.filter(r=>r.ag===ag&&r.season===season);
   if(div&&div!=='(All)') filtered=filtered.filter(r=>r.division===div);
-  // Number the date-based rounds over the current division scope (before round/team filters)
-  const keyOrder=[...new Set(filtered.map(resRoundKey))].sort();
-  const roundNumByKey={}; keyOrder.forEach((k,i)=>roundNumByKey[k]=i+1);
-  const dispRound=r=>roundNumByKey[resRoundKey(r)]||0;
+  // Number the date-based rounds PER DIVISION, so a match keeps the same round number whether you
+  // view its division alone or "(All)" divisions together (the round is tied to division + date).
+  const keysByDiv={};
+  filtered.forEach(r=>{ (keysByDiv[r.division]=keysByDiv[r.division]||new Set()).add(resRoundKey(r)); });
+  const roundNumByDiv={};
+  Object.keys(keysByDiv).forEach(dv=>{ const m={}; [...keysByDiv[dv]].sort().forEach((k,i)=>m[k]=i+1); roundNumByDiv[dv]=m; });
+  const dispRound=r=>(roundNumByDiv[r.division]||{})[resRoundKey(r)]||0;
+  const allRounds=[...new Set(filtered.map(dispRound))].sort((a,b)=>a-b);
   const curR=roundSel.value;
-  setOptions(roundSel,['(All)',...keyOrder.map((k,i)=>String(i+1))]);
+  setOptions(roundSel,['(All)',...allRounds.map(String)]);
   if(curR) roundSel.value=curR;
   // Team filter options (from the division-filtered set, all rounds)
   const teamSel=document.getElementById('res-team');
@@ -2060,7 +2064,7 @@ function renderResults() {
     if(exact) filtered=filtered.filter(r=>r.home===exact||r.away===exact);
     else { const q=tf.toLowerCase(); filtered=filtered.filter(r=>r.home.toLowerCase().includes(q)||r.away.toLowerCase().includes(q)); }
   }
-  filtered.sort((a,b)=>resRoundKey(a).localeCompare(resRoundKey(b))||(a.date||'').localeCompare(b.date||'')||a.home.localeCompare(b.home));
+  filtered.sort((a,b)=>dispRound(a)-dispRound(b)||a.division.localeCompare(b.division)||(a.date||'').localeCompare(b.date||'')||a.home.localeCompare(b.home));
   const out=document.getElementById('results-out');
   if(!filtered.length){out.innerHTML='<div class="empty">No results found.</div>';return;}
   let curGw=null, h='<div class="fix-list">';
@@ -2068,7 +2072,7 @@ function renderResults() {
     const dr=dispRound(r);
     if(dr!==curGw){
       curGw=dr;
-      h+=`<div class="fix-gw-hdr">Round ${dr}${r.date?` <span style="font-weight:400;color:#8aa">· ${fmtDate(r.date)}</span>`:''}</div>`;
+      h+=`<div class="fix-gw-hdr">Round ${dr}${(div!=='(All)'&&r.date)?` <span style="font-weight:400;color:#8aa">· ${fmtDate(r.date)}</span>`:''}</div>`;
     }
     const rowDate = `<span class="fix-rowdate" title="Comet fixture round ${r.round}">${r.date?fmtDate(r.date):''}</span>`;
     const hw=r.hg>r.awg, aw=r.awg>r.hg;

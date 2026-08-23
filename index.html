@@ -1729,6 +1729,10 @@ const SECTION_LOADERS = {
   setup: renderSetup
 };
 let activeSection='overview';
+// Last real division picked on a viewing screen (Results/Tables/Fixtures), so the
+// choice carries over when you flick between those pages. '(All)' is not stored.
+let sharedDiv=null;
+function applySharedDiv(sel){ if(sharedDiv && [...sel.options].some(o=>o.value===sharedDiv)) sel.value=sharedDiv; }
 
 function nav(sec, btn) {
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
@@ -1872,11 +1876,15 @@ function upsertResult(o){
 }
 
 function tblDivLoad() {
-  setOptions(document.getElementById('tbl-div'), getDivs(curAG(), curSeason()));
+  const sel=document.getElementById('tbl-div');
+  setOptions(sel, getDivs(curAG(), curSeason()));
+  applySharedDiv(sel);
   renderTable();
 }
 function resDivLoad() {
-  setOptions(document.getElementById('res-div'), ['(All)',...getDivs(curAG(), curSeason())]);
+  const sel=document.getElementById('res-div');
+  setOptions(sel, ['(All)',...getDivs(curAG(), curSeason())]);
+  applySharedDiv(sel);
   renderResults();
 }
 function entDivLoad() {
@@ -1890,7 +1898,9 @@ function entTeamLoad() {
   setOptions(document.getElementById('ent-away'), teams);
 }
 function fixDivLoad() {
-  setOptions(document.getElementById('fix-div'), getDivs(curAG(), curSeason()));
+  const sel=document.getElementById('fix-div');
+  setOptions(sel, getDivs(curAG(), curSeason()));
+  applySharedDiv(sel);
   renderFixtures();
 }
 // Setup > Generate Fixtures & Unavailability (uses its own sf-div division selector)
@@ -1947,6 +1957,7 @@ function statCols(s){
 
 function renderTable() {
   const ag=curAG(), season=curSeason(), div=document.getElementById('tbl-div').value;
+  if(div) sharedDiv=div;
   const view=document.getElementById('tbl-view').value;
   const rows=calcTable(ag,season,div);
   const out=document.getElementById('table-out');
@@ -2011,6 +2022,7 @@ function abbr(name) {
 function renderResults() {
   const ag=curAG(), season=curSeason();
   const div=document.getElementById('res-div').value, roundSel=document.getElementById('res-round');
+  if(div && div!=='(All)') sharedDiv=div;
   let filtered=DB.results.filter(r=>r.ag===ag&&r.season===season);
   if(div&&div!=='(All)') filtered=filtered.filter(r=>r.division===div);
   const rounds=[...new Set(filtered.map(r=>r.round))].sort((a,b)=>a-b);
@@ -2126,6 +2138,7 @@ function cycleSource(id){
 
 function renderFixtures() {
   const ag=curAG(), season=curSeason(), div=document.getElementById('fix-div').value;
+  if(div) sharedDiv=div;
   const matches=DB.fixtures.filter(f=>f.ag===ag&&f.season===season&&f.division===div);
   const out=document.getElementById('fixtures-out');
   if(!matches.length){out.innerHTML='<div class="empty">No fixtures yet. Use the panel above to generate a fixture list.</div>';return;}

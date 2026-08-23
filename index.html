@@ -142,7 +142,7 @@ tr:hover td{background:#f5faf5}
   <div class="filters">
     <div class="form-row"><label>Division</label><select id="res-div" onchange="renderResults()"></select></div>
     <div class="form-row"><label>Round</label><select id="res-round" onchange="renderResults()"></select></div>
-    <div class="form-row"><label>Team</label><select id="res-team" onchange="renderResults()"></select></div>
+    <div class="form-row"><label>Team</label><input type="text" id="res-team" list="res-team-list" placeholder="Search teams…" oninput="renderResults()" autocomplete="off"><datalist id="res-team-list"></datalist></div>
   </div>
   <div id="results-out"></div>
 </div>
@@ -2020,13 +2020,17 @@ function renderResults() {
   // Team filter options (from the division-filtered set, all rounds)
   const teamSel=document.getElementById('res-team');
   const teams=[...new Set(filtered.flatMap(r=>[r.home,r.away]))].sort((a,b)=>a.localeCompare(b));
-  const curT=teamSel.value;
-  setOptions(teamSel,['(All teams)',...teams]);
-  if(curT && (curT==='(All teams)'||teams.includes(curT))) teamSel.value=curT;
+  // Type-to-search: the datalist offers the division's teams; an exact pick filters to that
+  // team, and any other typed text narrows by case-insensitive substring on either side.
+  document.getElementById('res-team-list').innerHTML = teams.map(t=>`<option value="${esc(t)}"></option>`).join('');
   const rf=roundSel.value;
   if(rf&&rf!=='(All)') filtered=filtered.filter(r=>String(r.round)===rf);
-  const tf=teamSel.value;
-  if(tf&&tf!=='(All teams)') filtered=filtered.filter(r=>r.home===tf||r.away===tf);
+  const tf=(teamSel.value||'').trim();
+  if(tf){
+    const exact=teams.find(t=>t.toLowerCase()===tf.toLowerCase());
+    if(exact) filtered=filtered.filter(r=>r.home===exact||r.away===exact);
+    else { const q=tf.toLowerCase(); filtered=filtered.filter(r=>r.home.toLowerCase().includes(q)||r.away.toLowerCase().includes(q)); }
+  }
   filtered.sort((a,b)=>a.round-b.round||a.date.localeCompare(b.date));
   const out=document.getElementById('results-out');
   if(!filtered.length){out.innerHTML='<div class="empty">No results found.</div>';return;}

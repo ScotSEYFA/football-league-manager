@@ -2020,15 +2020,31 @@ function abbr(name) {
   return w.length<=2?name:w.filter(x=>x.length>2).map(x=>x[0]).join('').toUpperCase()||name.slice(0,3);
 }
 
+// Results rounds are grouped by when games were actually PLAYED, not Comet's fixture-round
+// numbers (which get rearranged, so a team can appear twice in one Comet round). Each weekend
+// (Sat+Sun together) is one round; each midweek date (Mon–Fri) is its own round. Rounds are then
+// numbered 1..N per division in date order, so weeks with no games simply get no round.
+function isoDate(dt){ return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0'); }
+function resRoundKey(r){
+  const d=r.date;
+  if(!d) return 'z'+String(r.round||0).padStart(4,'0'); // undated: keep after dated games, by Comet round
+  const dt=new Date(d+'T00:00:00'), dow=dt.getDay(); // 0=Sun … 6=Sat
+  if(dow===0){ const s=new Date(dt); s.setDate(dt.getDate()-1); return 'a'+isoDate(s); } // Sun → its Saturday
+  return 'a'+d; // Sat, or a midweek date on its own
+}
+
 function renderResults() {
   const ag=curAG(), season=curSeason();
   const div=document.getElementById('res-div').value, roundSel=document.getElementById('res-round');
   if(div && div!=='(All)') sharedDiv=div;
   let filtered=DB.results.filter(r=>r.ag===ag&&r.season===season);
   if(div&&div!=='(All)') filtered=filtered.filter(r=>r.division===div);
-  const rounds=[...new Set(filtered.map(r=>r.round))].sort((a,b)=>a-b);
+  // Number the date-based rounds over the current division scope (before round/team filters)
+  const keyOrder=[...new Set(filtered.map(resRoundKey))].sort();
+  const roundNumByKey={}; keyOrder.forEach((k,i)=>roundNumByKey[k]=i+1);
+  const dispRound=r=>roundNumByKey[resRoundKey(r)]||0;
   const curR=roundSel.value;
-  setOptions(roundSel,['(All)',...rounds.map(String)]);
+  setOptions(roundSel,['(All)',...keyOrder.map((k,i)=>String(i+1))]);
   if(curR) roundSel.value=curR;
   // Team filter options (from the division-filtered set, all rounds)
   const teamSel=document.getElementById('res-team');
@@ -2037,29 +2053,31 @@ function renderResults() {
   // team, and any other typed text narrows by case-insensitive substring on either side.
   document.getElementById('res-team-list').innerHTML = teams.map(t=>`<option value="${esc(t)}"></option>`).join('');
   const rf=roundSel.value;
-  if(rf&&rf!=='(All)') filtered=filtered.filter(r=>String(r.round)===rf);
+  if(rf&&rf!=='(All)') filtered=filtered.filter(r=>String(dispRound(r))===rf);
   const tf=(teamSel.value||'').trim();
   if(tf){
     const exact=teams.find(t=>t.toLowerCase()===tf.toLowerCase());
     if(exact) filtered=filtered.filter(r=>r.home===exact||r.away===exact);
     else { const q=tf.toLowerCase(); filtered=filtered.filter(r=>r.home.toLowerCase().includes(q)||r.away.toLowerCase().includes(q)); }
   }
-  filtered.sort((a,b)=>a.round-b.round||a.date.localeCompare(b.date));
+  filtered.sort((a,b)=>resRoundKey(a).localeCompare(resRoundKey(b))||(a.date||'').localeCompare(b.date||'')||a.home.localeCompare(b.home));
   const out=document.getElementById('results-out');
   if(!filtered.length){out.innerHTML='<div class="empty">No results found.</div>';return;}
   let curGw=null, h='<div class="fix-list">';
   for(const r of filtered){
-    if(r.round!==curGw){
-      curGw=r.round;
-      h+=`<div class="fix-gw-hdr">Round ${r.round}</div>`;
+    const dr=dispRound(r);
+    if(dr!==curGw){
+      curGw=dr;
+      h+=`<div class="fix-gw-hdr">Round ${dr}${r.date?` <span style="font-weight:400;color:#8aa">· ${fmtDate(r.date)}</span>`:''}</div>`;
     }
-    const rowDate = `<span class="fix-rowdate">${r.date?fmtDate(r.date):''}</span>`;
+    const rowDate = `<span class="fix-rowdate" title="Comet fixture round ${r.round}">${r.date?fmtDate(r.date):''}</span>`;
     const hw=r.hg>r.awg, aw=r.awg>r.hg;
     const avail=Object.keys(r.sources||{});
     const chosen=r.chosen||'Manual';
     const disc=!!r.autoComment;
     // tooltip: all source scores + comment
     let tip=avail.map(s=>`${s}: ${r.sources[s].hg}-${r.sources[s].awg}`).join('  |  ')||chosen;
+    tip+=`\nComet fixture round: ${r.round}`;
     if(r.comment) tip+=`\nComment: ${r.comment}`;
     if(r.autoComment) tip+=`\n${r.autoComment}`;
     if(avail.length>1) tip+='\n(click to switch chosen source)';

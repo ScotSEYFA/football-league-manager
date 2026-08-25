@@ -1206,7 +1206,12 @@ const SEED_RESULT_REDATE = [
 ];
 
 
-const STORE_KEY = 'flm_v75';
+const SEED_ROUND_FOLD = [
+  ["Under 15","2026 / 2027","Division 3B","Lochend Football Academy Reds","Cramond Lions Football Club","2026-08-23"]
+];
+
+
+const STORE_KEY = 'flm_v76';
 
 const STD_DIVS = ['Division 1','Division 2A','Division 2B','Division 3A','Division 3B','Division 4A','Division 4B'];
 const STD_AGES = ['Under 13','Under 14','Under 15','Under 16','Under 17','Under 18'];
@@ -1711,6 +1716,11 @@ function seedData() {
   if (typeof SEED_RESULT_REDATE !== 'undefined') {
     for (const r of SEED_RESULT_REDATE){ const m=findMatch(r[0],r[1],r[2],r[3],r[4]); if(m) m.date=r[5]; }
   }
+  // ===== Round fold: keep a game's real played date but group it into another round =====
+  // [ag, season, division, home, away, roundDateISO] — e.g. a Monday game that belongs to the Sunday round.
+  if (typeof SEED_ROUND_FOLD !== 'undefined') {
+    for (const r of SEED_ROUND_FOLD){ const m=findMatch(r[0],r[1],r[2],r[3],r[4]); if(m) m.roundDate=r[5]; }
+  }
 }
 
 // Navigation
@@ -2037,7 +2047,7 @@ function abbr(name) {
 // numbered 1..N per division in date order, so weeks with no games simply get no round.
 function isoDate(dt){ return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0'); }
 function resRoundKey(r){
-  const d=r.date;
+  const d=r.roundDate||r.date; // roundDate: optional override so a late-played game folds into its real round
   if(!d) return 'z'+String(r.round||0).padStart(4,'0'); // undated: keep after dated games, by Comet round
   const dt=new Date(d+'T00:00:00'), dow=dt.getDay(); // 0=Sun … 6=Sat
   if(dow===0){ const s=new Date(dt); s.setDate(dt.getDate()-1); return 'a'+isoDate(s); } // Sun → its Saturday

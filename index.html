@@ -1222,8 +1222,92 @@ const SEED_ROUND_FOLD = [
   ["Under 15","2026 / 2027","Division 3B","Lochend Football Academy Reds","Cramond Lions Football Club","2026-08-23"]
 ];
 
+// Upcoming fixtures scraped from seryfa-online.info (current matchday snapshot for Overview).
+// [ag, division, home, away, dateISO, venue]
+const SEED_2627_WEBFIX = [
+  ["Under 13", "Division 1A", "Bathgate Thistle CFC Blues", "Inverkeithing Hillfield Swifts", "2026-08-30", ""],
+  ["Under 13", "Division 1B", "Tynecastle FC", "Spartans FC Youth", "2026-08-30", "Saughton 4G"],
+  ["Under 13", "Division 2A", "Bonnyrigg Rose Thistle", "Tynecastle F C Maroons", "2026-08-30", ""],
+  ["Under 13", "Division 3B", "Edinburgh South Community FC Sharks", "Corstorphine Dynamo FC Blacks", "2026-08-30", ""],
+  ["Under 13", "Division 3B", "Leith Athletic F C Colts", "North Berwick Town FC", "2026-08-30", "Leith Links"],
+  ["Under 13", "Division 4A", "Lochend Football Academy Colts", "Dunbar United Colts Whites", "2026-08-30", "Seafield 11.00am"],
+  ["Under 15", "Division 4", "Loanhead Miners Youth FC Blues", "Musselburgh Windsor FC Whites", "2026-08-26", ""],
+  ["Under 15", "Division 3A", "Musselburgh Youngstars", "Dalkeith Thistle CFC Deportivo", "2026-08-27", ""],
+  ["Under 15", "Division 1", "Currie Star F C", "Spartans FC Youth Whites", "2026-08-30", "Balerno HS 3G 1pm"],
+  ["Under 15", "Division 1", "Dunbar United Colts", "Bonnyrigg Rose FC", "2026-08-30", ""],
+  ["Under 15", "Division 1", "Edinburgh City FC", "Spartans FC Youth", "2026-08-30", ""],
+  ["Under 15", "Division 1", "Edinburgh City", "Musselburgh Windsor F C", "2026-08-30", "Forrester HS 3G 1pm"],
+  ["Under 15", "Division 1", "Edinburgh South CFC", "Melrose FC", "2026-08-30", ""],
+  ["Under 15", "Division 1", "Hutchison Vale FC Whites", "Lochend Football Academy", "2026-08-30", ""],
+  ["Under 15", "Division 1", "Hutchison Vale FC Blacks", "KSQ Galaxy", "2026-08-30", ""],
+  ["Under 15", "Division 2A", "North Berwick FC", "Blackburn United Black", "2026-08-30", ""],
+  ["Under 15", "Division 2A", "Inverkeithing Hillfield Swifts", "Corstorphine Dynamo FC", "2026-08-30", ""],
+  ["Under 15", "Division 2A", "Edinburgh United YFC Black", "Cramond FC", "2026-08-30", "Paties Road"],
+  ["Under 15", "Division 2A", "Edinburgh South CFC Roma", "Dalkeith Thistle CFC", "2026-08-30", ""],
+  ["Under 15", "Division 2B", "Penicuik Athletic YFC", "Lochend Football Academy Colts", "2026-08-30", ""],
+  ["Under 15", "Division 2B", "Murieston United Reds", "Leith Athletic FC", "2026-08-30", ""],
+  ["Under 15", "Division 2B", "Bonnyrigg Rose Panthers", "Musselburgh Windsor FC Blues", "2026-08-30", ""],
+  ["Under 15", "Division 2B", "Craigroyston CYFC", "Currie FC Pumas", "2026-08-30", "Craigie Park"],
+  ["Under 15", "Division 3A", "Edinburgh South Community CFC Reds", "Spartans FC Youth Reds", "2026-08-30", ""],
+  ["Under 15", "Division 3A", "Eyemouth United FC Juniors", "Edinburgh City FC Colts", "2026-08-30", ""],
+  ["Under 15", "Division 3A", "North Merchiston FC Blacks", "Currie Star Whites", "2026-08-30", "Tynecastle HS 4G 1.10pm"],
+  ["Under 15", "Division 3A", "Salvesen CFC", "Bonnyrigg Rose Athletic", "2026-08-30", "Forrester HS 3G 1.15pm"],
+  ["Under 15", "Division 3B", "Preston Athletic YFC Colts", "Edinburgh City Reds", "2026-08-30", ""],
+  ["Under 15", "Division 3B", "Edinburgh United Youth FC Whites", "Edinburgh South CFC Rams", "2026-08-30", "Redhall Park"],
+  ["Under 15", "Division 3B", "Inverkeithing Hillfield Swifts Lightning", "Lochend Football Academy Reds", "2026-08-30", ""],
+  ["Under 15", "Division 3B", "KSQ Rapids", "Penicuik Athletic YFC Blues", "2026-08-30", "Queensferry HS 3G noon"],
+  ["Under 15", "Division 3B", "Murieston United Blues", "Cramond Lions Football Club", "2026-08-30", ""],
+  ["Under 15", "Division 3B", "North Berwick FC Town", "Longniddry Villa", "2026-08-30", ""],
+  ["Under 15", "Division 4", "Preston Athletic YFC", "Musselburgh Windsor FC Whites", "2026-08-30", ""],
+  ["Under 15", "Division 4", "AC Oxgangs CFC", "Loanhead Miners Youth FC Blues", "2026-08-30", "Colinton"],
+  ["Under 15", "Division 4", "Dalkeith Thistle CFC Balompie", "Leith Athletic Colts", "2026-08-30", ""],
+  ["Under 15", "Division 4", "Easthouses Lily", "Edinburgh United YFC Red", "2026-08-30", ""],
+  ["Under 15", "Division 4", "Edinburgh City Blacks", "Bonnyrigg Rose United", "2026-08-30", "Forrester HS 3G 3pm"],
+  ["Under 16", "Division 1", "Castlevale YD Club", "Spartans FC Youth", "2026-08-30", ""],
+  ["Under 16", "Division 1", "Cramond FC", "Broxburn Athletic Colts", "2026-08-30", ""],
+  ["Under 16", "Division 1", "Eastside Rapids", "North Berwick FC", "2026-08-30", ""],
+  ["Under 16", "Division 1", "Musselburgh Windsor F C Blues", "Edinburgh City FC", "2026-08-30", ""],
+  ["Under 16", "Division 1", "Edinburgh United YFC Blacks", "Musselburgh Windsor F C", "2026-08-30", "Broughton HS 3G 2.30pm"],
+  ["Under 16", "Division 1", "Hibernian Community", "Leith Athletic", "2026-08-30", "Portobello HS 3G 2pm"],
+  ["Under 16", "Division 2", "Arniston Rangers YFC", "Tynecastle FC", "2026-08-30", ""],
+  ["Under 16", "Division 2", "Blackburn United CFC", "Spartans FC Youth Whites", "2026-08-30", ""],
+  ["Under 16", "Division 2", "Broxburn Athletic Colts Badgers", "Preston Athletic Y F C", "2026-08-30", ""],
+  ["Under 16", "Division 2", "Cramond Strollers CFC", "Musselburgh Windsor F C Whites", "2026-08-30", ""],
+  ["Under 16", "Division 2", "Dalkeith Thistle CFC", "Lochend FA", "2026-08-30", ""],
+  ["Under 16", "Division 2", "Edinburgh South CFC Warriors", "Loanhead Miners Youth FC", "2026-08-30", ""],
+  ["Under 16", "Division 2", "Haddington Athletic CFC", "KSQ Galaxy", "2026-08-30", ""],
+  ["Under 16", "Division 2", "Hutchison Vale FC", "Kelso FC", "2026-08-30", ""],
+  ["Under 16", "Division 3B", "Craigroyston CYFC Blues", "Cramond Yellows", "2026-08-30", "Craigie Park"],
+  ["Under 16", "Division 3B", "Edinburgh United Youth FC Whites", "Corstorphine Dynamo FC Blacks", "2026-08-30", "Redhall Park"],
+  ["Under 16", "Division 3B", "Peebles FC", "Tynecastle F C Maroons", "2026-08-30", ""],
+  ["Under 16", "Division 3B", "Penicuik Athletic YFC Whites", "Spartans FC Youth Reds", "2026-08-30", ""],
+  ["Under 16", "Division 4", "Vennie United", "Tranent FC", "2026-08-30", ""],
+  ["Under 16", "Division 4", "Wallyford Rose FC", "Polbeth United Reds", "2026-08-30", ""],
+  ["Under 16", "Division 4", "Corstorphine Dynamo FC Blues", "Penicuik Athletic YFC Blues", "2026-08-30", ""],
+  ["Under 16", "Division 4", "Dalkeith Thistle CFC Deportivo", "Longniddry Villa", "2026-08-30", ""],
+  ["Under 16", "Division 4", "Edinburgh South CFC Titans", "Gala Fairydean Rovers Reds", "2026-08-30", ""],
+  ["Under 17", "Division 1", "East Calder CFC", "Bayside Athletic", "2026-08-29", ""],
+  ["Under 17", "Division 1", "Edinburgh City FC", "AC Oxgangs CFC", "2026-08-29", ""],
+  ["Under 17", "Division 1", "Edinburgh South CFC", "Spartans FC Youth Whites", "2026-08-29", ""],
+  ["Under 17", "Division 1", "Musselburgh Windsor F C", "North Merchiston FC", "2026-08-29", ""],
+  ["Under 17", "Division 2", "Musselburgh Windsor FC Whites", "Murieston United Blues", "2026-08-29", ""],
+  ["Under 17", "Division 2", "Spartans FC Youth Reds", "Dalkeith Thistle CFC Cardo", "2026-08-29", "Ainslie Park 3pm"],
+  ["Under 17", "Division 2", "Tranent FC", "Dalkeith Thistle CFC Balompie", "2026-08-29", ""],
+  ["Under 17", "Division 2", "Cramond FC", "Currie Star", "2026-08-29", "Forrester HS 3G 1pm"],
+  ["Under 17", "Division 2", "Currie F C Lions", "Musselburgh Windsor F C Blues", "2026-08-29", "Currie HS 3G 1pm"],
+  ["Under 17", "Division 3", "Currie F C Tigers", "Bonnyrigg Rose Blacks", "2026-08-29", "Forrester HS 3G 3pm"],
+  ["Under 17", "Division 3", "Dunbar United Colts", "AC Oxgangs CFC Calcio", "2026-08-29", ""],
+  ["Under 17", "Division 3", "Gala Fairydean Rovers", "Penicuik Athletic YFC Reds", "2026-08-29", ""],
+  ["Under 17", "Division 3", "KSQ Rapids", "Longniddry Villa", "2026-08-29", ""],
+  ["Under 17", "Division 3", "Livingston Community FC", "Musselburgh Windsor FC Reds", "2026-08-29", ""],
+  ["Under 18", "Division 1", "Edinburgh South Community CFC", "Dalkeith Thistle C F C", "2026-08-26", ""],
+  ["Under 18", "Division 1", "North Merchiston FC", "Spartans FC Youth", "2026-08-26", ""],
+  ["Under 18", "Division 1", "Penicuik Athletic F.C.", "Spartans FC Youth Blues", "2026-08-26", ""],
+  ["Under 18", "Division 1", "Dalkeith Thistle C F C", "Bonnyrigg Rose", "2026-08-31", ""],
+];
 
-const STORE_KEY = 'flm_v77';
+
+const STORE_KEY = 'flm_v78';
 
 const STD_DIVS = ['Division 1','Division 2A','Division 2B','Division 3A','Division 3B','Division 4A','Division 4B'];
 const STD_AGES = ['Under 13','Under 14','Under 15','Under 16','Under 17','Under 18'];
@@ -1732,6 +1816,20 @@ function seedData() {
   // [ag, season, division, home, away, roundDateISO] — e.g. a Monday game that belongs to the Sunday round.
   if (typeof SEED_ROUND_FOLD !== 'undefined') {
     for (const r of SEED_ROUND_FOLD){ const m=findMatch(r[0],r[1],r[2],r[3],r[4]); if(m) m.roundDate=r[5]; }
+  }
+  // ===== Upcoming fixtures scraped from the SERYFA website (seryfa-online.info) =====
+  // [ag, division, home, away, dateISO, venue] — snapshot of the current matchday for the Overview.
+  // No meaningful round number; round:0 and web:true so the Overview shows venue instead of "R{n}".
+  if (typeof SEED_2627_WEBFIX !== 'undefined') {
+    const s='2026 / 2027';
+    for (const r of SEED_2627_WEBFIX) {
+      const div=r[1];
+      if(!DB.divisions[r[0]]) DB.divisions[r[0]]=[];
+      if(!DB.divisions[r[0]].includes(div)) DB.divisions[r[0]].push(div);
+      const key=teamKey(r[0],s,div); if(!DB.teams[key]) DB.teams[key]=[];
+      for(const t of [r[2],r[3]]) if(!DB.teams[key].includes(t)) DB.teams[key].push(t);
+      DB.fixtures.push({ag:r[0],season:s,division:div,round:0,home:r[2],away:r[3],date:r[4],venue:r[5]||'',web:true});
+    }
   }
 }
 
@@ -2438,10 +2536,13 @@ function renderOverview() {
   // Upcoming fixtures: scheduled fixtures with no result yet, dated today or later
   // (past-dated fixtures with no result are treated as postponed and hidden until rescheduled)
   const today=new Date().toISOString().slice(0,10);
-  const played=new Set(DB.results.filter(r=>r.ag===ag&&r.season===season)
-    .map(r=>r.division+'|'+r.round+'|'+r.home+'|'+r.away));
+  const playedRes=DB.results.filter(r=>r.ag===ag&&r.season===season);
+  const played=new Set(playedRes.map(r=>r.division+'|'+r.round+'|'+r.home+'|'+r.away));
+  // web fixtures have no round (round:0), so also dedupe against results by division+pairing
+  const playedPair=new Set(playedRes.map(r=>r.division+'|'+r.home+'|'+r.away));
   let upcoming=DB.fixtures.filter(f=>f.ag===ag&&f.season===season
     && !played.has(f.division+'|'+f.round+'|'+f.home+'|'+f.away)
+    && !(f.web && playedPair.has(f.division+'|'+f.home+'|'+f.away))
     && (!f.date || f.date>=today));
   upcoming.sort((a,b)=>(a.date||'9999').localeCompare(b.date||'9999')||a.round-b.round||a.division.localeCompare(b.division));
   upcoming=upcoming.slice(0,15);
@@ -2454,7 +2555,7 @@ function renderOverview() {
     for(const f of upcoming){
       h+=`<tr style="border-bottom:1px solid #f0f5f0">`+
         `<td style="padding:5px 6px;font-size:11px;color:#888;white-space:nowrap;width:60px">${f.date?fmtDate(f.date):'TBC'}</td>`+
-        `<td style="padding:5px 4px;font-size:10px;color:#888;white-space:nowrap">${esc(f.division.replace('Division ','Div '))} R${f.round}</td>`+
+        `<td style="padding:5px 4px;font-size:10px;color:#888;white-space:nowrap">${esc(f.division.replace('Division ','Div '))}${f.web?(f.venue?' &middot; '+esc(f.venue):''):' R'+f.round}</td>`+
         `<td style="padding:5px 6px;text-align:right;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(f.home)}</td>`+
         `<td style="padding:5px 6px;text-align:center;color:#aaa">v</td>`+
         `<td style="padding:5px 6px;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(f.away)}</td>`+

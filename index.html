@@ -1307,7 +1307,7 @@ const SEED_2627_WEBFIX = [
 ];
 
 
-const STORE_KEY = 'flm_v79';
+const STORE_KEY = 'flm_v80';
 
 const STD_DIVS = ['Division 1','Division 2A','Division 2B','Division 3A','Division 3B','Division 4A','Division 4B'];
 const STD_AGES = ['Under 13','Under 14','Under 15','Under 16','Under 17','Under 18'];
@@ -2293,7 +2293,8 @@ function cycleSource(id){
 function renderFixtures() {
   const ag=curAG(), season=curSeason(), div=document.getElementById('fix-div').value;
   if(div) sharedDiv=div;
-  const matches=DB.fixtures.filter(f=>f.ag===ag&&f.season===season&&f.division===div);
+  // Exclude web-scraped snapshot fixtures (round:0) — those are for the Overview only.
+  const matches=DB.fixtures.filter(f=>f.ag===ag&&f.season===season&&f.division===div&&!f.web);
   const out=document.getElementById('fixtures-out');
   if(!matches.length){out.innerHTML='<div class="empty">No fixtures yet. Use the panel above to generate a fixture list.</div>';return;}
   matches.sort((a,b)=>a.round-b.round||a.home.localeCompare(b.home));

@@ -1307,7 +1307,7 @@ const SEED_2627_WEBFIX = [
 ];
 
 
-const STORE_KEY = 'flm_v78';
+const STORE_KEY = 'flm_v79';
 
 const STD_DIVS = ['Division 1','Division 2A','Division 2B','Division 3A','Division 3B','Division 4A','Division 4B'];
 const STD_AGES = ['Under 13','Under 14','Under 15','Under 16','Under 17','Under 18'];
@@ -2551,17 +2551,20 @@ function renderOverview() {
   if(!upcoming.length){
     upOut.innerHTML='<div class="up-empty">No upcoming fixtures. Generate fixtures in the Fixtures tab, or every scheduled game already has a result.</div>';
   } else {
-    let h='<table style="width:100%;font-size:12px;border-collapse:collapse">';
+    let h='';
     for(const f of upcoming){
-      h+=`<tr style="border-bottom:1px solid #f0f5f0">`+
-        `<td style="padding:5px 6px;font-size:11px;color:#888;white-space:nowrap;width:60px">${f.date?fmtDate(f.date):'TBC'}</td>`+
-        `<td style="padding:5px 4px;font-size:10px;color:#888;white-space:nowrap">${esc(f.division.replace('Division ','Div '))}${f.web?(f.venue?' &middot; '+esc(f.venue):''):' R'+f.round}</td>`+
-        `<td style="padding:5px 6px;text-align:right;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(f.home)}</td>`+
-        `<td style="padding:5px 6px;text-align:center;color:#aaa">v</td>`+
-        `<td style="padding:5px 6px;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(f.away)}</td>`+
-        `</tr>`;
+      const meta=`${f.date?fmtDate(f.date):'TBC'} &middot; ${esc(f.division.replace('Division ','Div '))}`+
+        `${f.web?(f.venue?' &middot; '+esc(f.venue):''):' &middot; R'+f.round}`;
+      h+=`<div style="padding:6px 2px;border-bottom:1px solid #f0f5f0">`+
+        `<div style="display:flex;align-items:center;gap:6px;font-size:13px;line-height:1.25">`+
+          `<span style="flex:1 1 0;min-width:0;text-align:right;overflow-wrap:anywhere">${esc(f.home)}</span>`+
+          `<span style="flex:0 0 auto;color:#aaa">v</span>`+
+          `<span style="flex:1 1 0;min-width:0;overflow-wrap:anywhere">${esc(f.away)}</span>`+
+        `</div>`+
+        `<div style="font-size:10px;color:#888;text-align:center;margin-top:2px">${meta}</div>`+
+        `</div>`;
     }
-    upOut.innerHTML=h+'</table>';
+    upOut.innerHTML=h;
   }
 
   // Mini league tables per division

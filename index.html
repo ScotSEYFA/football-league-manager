@@ -129,7 +129,10 @@ tr:hover td{background:#f5faf5}
 <div id="sec-overview" class="section active">
   <div class="disclaimer">This app is not affiliated with, endorsed by, or officially connected to the SERYFA. Errors and omissions excepted.</div>
   <div class="card">
-    <div class="card-title">&#128197; Upcoming Fixtures</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
+      <div class="card-title" style="margin:0">&#128197; Upcoming Fixtures</div>
+      <select id="ov-fix-div" onchange="ovFixDivChange(this)" style="font-size:12px;padding:3px 6px;max-width:60%"></select>
+    </div>
     <div id="ov-upcoming"></div>
   </div>
   <div class="card-title" style="margin:6px 2px 10px;font-size:14px">&#127942; League Tables</div>
@@ -1227,7 +1230,7 @@ const SEED_ROUND_FOLD = [
 const SEED_2627_WEBFIX = [["Under 13", "Division 3B", "Edinburgh South Community FC Sharks", "Inter Currie FC", "2026-09-04", ""], ["Under 15", "Division 4", "Pentland Athletic Youth FC", "Easthouses Lily", "2026-09-02", ""], ["Under 15", "Division 1", "Musselburgh Windsor F C", "Bonnyrigg Rose FC", "2026-09-06", ""], ["Under 15", "Division 2A", "Inverkeithing Hillfield Swifts", "Cramond FC", "2026-09-06", ""], ["Under 15", "Division 2B", "Musselburgh Windsor FC Blues", "Bonnyrigg Rose Panthers", "2026-09-06", ""], ["Under 15", "Division 3B", "Edinburgh South CFC Rams", "Edinburgh City Reds", "2026-09-06", ""], ["Under 16", "Division 1", "Edinburgh City FC", "Hibernian Community", "2026-09-06", ""], ["Under 16", "Division 1", "Musselburgh Windsor F C", "Eastside Rapids", "2026-09-06", ""], ["Under 16", "Division 3A", "Bonnyrigg Rose YFC", "Dunbar United Colts", "2026-09-06", ""], ["Under 17", "Division 1", "Edinburgh City Whites", "North Merchiston FC", "2026-09-05", "Forrester HS 3G 1pm"], ["Under 17", "Division 3", "Longniddry Villa", "Currie F C Tigers", "2026-09-05", ""], ["Under 18", "Division 1", "Easthouses Lily", "Bonnyrigg Rose", "2026-09-02", ""], ["Under 18", "Division 1", "Dalkeith Thistle C F C", "Corstorphine Dynamo FC Blacks", "2026-09-05", ""], ["Under 18", "Division 1", "Easthouses Lily", "Broxburn Athletic Colts", "2026-09-05", ""], ["Under 18", "Division 1", "Edinburgh South Community CFC", "Bonnyrigg Rose", "2026-09-05", ""], ["Under 18", "Division 1", "Edinburgh South CFC Reds", "Tranent FC", "2026-09-05", ""], ["Under 18", "Division 1", "Inverkeithing Hillfield Swifts", "Spartans FC Youth", "2026-09-05", ""], ["Under 18", "Division 1", "KSQ Galaxy", "Spartans FC Youth Blues", "2026-09-05", ""], ["Under 18", "Division 1", "KSQ Rapids", "Penicuik Athletic F.C.", "2026-09-05", ""], ["Under 18", "Division 1", "North Berwick FC", "North Merchiston FC", "2026-09-05", ""]];
 
 
-const STORE_KEY = 'flm_v89';
+const STORE_KEY = 'flm_v90';
 
 const STD_DIVS = ['Division 1','Division 2A','Division 2B','Division 3A','Division 3B','Division 4A','Division 4B'];
 const STD_AGES = ['Under 13','Under 14','Under 15','Under 16','Under 17','Under 18'];
@@ -2450,6 +2453,8 @@ function gotoTable(div){
   renderTable();
 }
 
+let ovFixDiv='';
+function ovFixDivChange(sel){ ovFixDiv=sel.value; renderOverview(); }
 function renderOverview() {
   const ag=curAG(), season=curSeason();
   const divs=getDivs(ag, season);
@@ -2464,9 +2469,18 @@ function renderOverview() {
   let upcoming=DB.fixtures.filter(f=>f.ag===ag&&f.season===season
     && !played.has(f.division+'|'+f.round+'|'+f.home+'|'+f.away)
     && !(f.web && playedPair.has(f.division+'|'+f.home+'|'+f.away))
-    && (!f.date || f.date>=today));
+    && f.date && f.date>=today);   // exclude undated (TBC) fixtures
+  // Division filter dropdown for the upcoming list
+  const fixSel=document.getElementById('ov-fix-div');
+  if(fixSel){
+    const upDivs=[...new Set(upcoming.map(f=>f.division))].sort((a,b)=>a.localeCompare(b));
+    if(ovFixDiv && upDivs.indexOf(ovFixDiv)<0) ovFixDiv='';
+    fixSel.innerHTML='<option value="">All divisions</option>'+upDivs.map(d=>`<option value="${esc(d)}">${esc(d)}</option>`).join('');
+    fixSel.value=ovFixDiv;
+  }
+  if(ovFixDiv) upcoming=upcoming.filter(f=>f.division===ovFixDiv);
   upcoming.sort((a,b)=>(a.date||'9999').localeCompare(b.date||'9999')||a.round-b.round||a.division.localeCompare(b.division));
-  upcoming=upcoming.slice(0,15);
+  upcoming=upcoming.slice(0, ovFixDiv?999:40);
 
   const upOut=document.getElementById('ov-upcoming');
   if(!upcoming.length){

@@ -83,6 +83,11 @@ tr:hover td{background:#f5faf5}
 .tag-w{background:#d1fae5;color:#065f46}
 .tag-d{background:#fef3c7;color:#92400e}
 .tag-l{background:#fee2e2;color:#991b1b}
+.form-cell{display:flex;gap:3px}
+.fp{width:18px;height:18px;border-radius:4px;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;line-height:1;color:#fff;flex-shrink:0}
+.fp-w{background:#16a34a}
+.fp-d{background:#e0a500}
+.fp-l{background:#dc2626}
 .empty{color:#888;font-size:13px;padding:20px;text-align:center;font-style:italic}
 .del-btn{font-size:10px;padding:2px 7px;border:1px solid #fca5a5;color:#b91c1c;background:none;border-radius:4px;cursor:pointer;flex-shrink:0}
 .del-btn:hover{background:#fef2f2}
@@ -1236,7 +1241,7 @@ const SEED_2627_CUPS = [["Under 15","2026 / 2027","South East Region Cup","1st R
 const SEED_2627_WEBFIX_CUPS = [["Under 13","South East Region Cup","Bathgate Thistle Blacks","Corstorphine Dynamo FC Whites","2026-11-28",""],["Under 13","Scottish Cup","Loanhead Miners YFC","W Academy Raptors","2026-11-29",""],["Under 13","Scottish Cup","Football Star Elite Whites","Rossvale FC United","2026-11-29",""],["Under 13","Scottish Cup","Haddington Athletic CFC","Larkhall Thistle CFC","2026-11-29",""],["Under 13","Scottish Cup","St Andrews Colts","Football Star Elite Blacks","2026-11-29",""],["Under 13","South East Region Cup","Penicuik Athletic YFC Blue","Musselburgh Windsor FC","2026-11-29",""],["Under 13","South East Region Cup","Hutchison Vale FC","Livingston FCC Whites","2026-11-29",""],["Under 13","South East Region Cup","Leith Athletic FC","Kelso FC","2026-11-29","Meadowbank 3G 10.15am"],["Under 13","South East Region Cup","Eastside Rapids","Livingston FC Community Yellows","2026-11-29",""],["Under 13","Ken Ritchie Cup","Bonnyrigg Rose Whites","North Berwick Town FC","2026-11-29",""],["Under 13","Frank Lewis Cup","Musselburgh Windsor FC Whites","Loanhead Miners Youth FC Star","2026-11-29",""],["Under 13","Frank Lewis Cup","Easthouses Lily","Gala Fairydean Rovers Reds","2026-11-29",""],["Under 13","Frank Lewis Cup","Edinburgh South CFC Cobras","Penicuik Athletic YFC Gold","2026-11-29",""],["Under 14","Scottish Cup","Gartcarn FA Whites","East Calder CFC","2026-11-28",""],["Under 14","Scottish Cup","St Cadocs YC City","KSQ Galaxy","2026-11-28",""],["Under 14","Scottish Cup","Clydebank FC","North Merchiston FC Blacks","2026-11-28",""],["Under 14","Scottish Cup","Gala Fairydean Rovers Reds","Maryfield Whites","2026-11-29",""],["Under 14","Scottish Cup","Broxburn Athletic Colts","On the ball Academy","2026-11-29",""],["Under 14","Scottish Cup","Kinworth Emirates Kaisers","Currie Star FC","2026-11-29",""],["Under 14","South East Region Cup","Bathgate Thistle Whites","Spartans FC Youth Reds","2026-11-29",""],["Under 14","South East Region Cup","Eastside Rapids","Murieston United Blue","2026-11-29",""],["Under 14","South East Region Cup","Currie Star FC","Edinburgh City","2026-11-29","Balerno HS 3G 9.30am"],["Under 14","South East Region Cup","North Berwick FC","The Reivers","2026-11-29",""],["Under 14","South East Region Cup","Corstorphine Dynamo FC Whites","Bathgate Thistle Blacks","2026-11-29",""],["Under 14","South East Region Cup","Broxburn Athletic Colts","Blackburn United FC Blacks","2026-11-29",""],["Under 14","South East Region Cup","Leith Athletic FC","Haddington Athletic CFC","2026-11-29","Meadowbank 3G 12.15pm"],["Under 14","Paladin Cup","Leith Athletic Blacks","Edinburgh United Reds","2026-11-29","Leith Links"],["Under 14","Paladin Cup","Corstorphine Dynamo Greeen","North Berwick FC Red","2026-11-29",""],["Under 14","Paladin Cup","Craigroyston Blues","Dalkeith Thistle CFC Deportivo","2026-11-29",""],["Under 14","Paladin Cup","Tranent FC Maroon","Edinburgh United Golds","2026-11-29",""],["Under 14","Paladin Cup","Musselburgh Young Stars Inter","Edinburgh United Grey","2026-11-29",""],["Under 15","Scottish Cup","Edinburgh South CFC","Holytown Colts FC Reds","2026-11-29",""],["Under 15","Scottish Cup","Banks o Dee Albion","Bonnyrigg Rose United","2026-11-29",""],["Under 15","South East Region Cup","Melrose FC","Edinburgh City FC Colts","2026-11-29",""],["Under 15","South East Region Cup","Edinburgh City FC","Musselburgh Windsor FC Blues","2026-11-29",""],["Under 15","South East Region Cup","Musselburgh Windsor FC","Leith Athletic FC","2026-11-29",""],["Under 15","South East Region Cup","Edinburgh City","Lochend Club","2026-11-29","Forrester HS 3G 1pm"],["Under 15","South East Region Cup","Spartans FC Youth","Corstorphine Dynamo FC","2026-11-29",""],["Under 15","South East Region Cup","Penicuik Athletic YFC","Edinburgh South CFC Roma","2026-11-29",""],["Under 16","Scottish Cup","Clydebank","Leith Athletic","2026-11-28",""],["Under 16","Scottish Cup","Broxburn Athletic Colts","Renfrew FC","2026-11-29",""],["Under 16","Scottish Cup","Eastside Rapids","Claremont AFC Blues","2026-11-29",""],["Under 16","South East Region Cup","Haddington Athletic CFC","Cramond FC","2026-11-29",""],["Under 16","South East Region Cup","Blackburn United White","Tynecastle FC","2026-11-29",""],["Under 16","South East Region Cup","North Berwick FC","Armadale CFC","2026-11-29",""],["Under 16","South East Region Cup","Hibernian Community","Spartans FC Youth","2026-11-29","Portobello HS 3G 2pm"],["Under 16","South East Region Cup","Gala Fairydean Rovers Reds","Spartans FC Youth Whites","2026-11-29",""],["Under 16","South East Region Cup","Broxburn Athletic Colts Badgers","Bathgate Thistle CFC White","2026-11-29",""],["Under 16","Chairmans Cup","North Merchiston FC Whites","Corstorphine Dynamo FC Whites","2026-11-29","Tynecastle HS 4G noon"],["Under 16","Chairmans Cup","Tynecastle FC Maroons","Chirnside Utd","2026-11-29",""],["Under 16","Chairmans Cup","Craigroyston Blues","Spartans FC Youth Reds","2026-11-29","Craigroyston HS 3G 1pm"],["Under 17","Scottish Cup","Spartans FC Youth","Currie FC Lions","2026-11-28","Ainslie Park 3G 1pm"],["Under 17","Scottish Cup","Hillwood FC","Bayside Athletic","2026-11-28",""]];
 
 
-const STORE_KEY = 'flm_v165';
+const STORE_KEY = 'flm_v166';
 
 const STD_DIVS = ['Division 1','Division 2A','Division 2B','Division 3A','Division 3B','Division 4A','Division 4B'];
 const STD_AGES = ['Under 13','Under 14','Under 15','Under 16','Under 17','Under 18'];
@@ -2015,6 +2020,13 @@ function calcTable(ag, season, division) {
   const home={}, away={};
   teamList.forEach(t => { home[t]=mk(); away[t]=mk(); });
   const matches = DB.results.filter(r=>r.ag===ag&&r.season===season&&r.division===division);
+  // per-team result logs for the Form column: {date, res:'W'|'D'|'L'} for home, away and all games
+  const log={};
+  const logIt=(team,date,res,kind)=>{
+    if(!log[team]) log[team]={home:[],away:[],all:[]};
+    log[team][kind].push({date:date||'',res});
+    log[team].all.push({date:date||'',res});
+  };
   for (const m of matches) {
     if (!home[m.home]) home[m.home]=mk();
     if (!away[m.home]) away[m.home]=mk();
@@ -2023,10 +2035,16 @@ function calcTable(ag, season, division) {
     const h=home[m.home], a=away[m.away];
     h.pl++; h.gf+=m.hg; h.ga+=m.awg;
     a.pl++; a.gf+=m.awg; a.ga+=m.hg;
-    if(m.hg>m.awg)      { h.w++; h.pts+=3; a.l++; }
-    else if(m.hg<m.awg) { a.w++; a.pts+=3; h.l++; }
-    else                 { h.d++; h.pts++;  a.d++; a.pts++; }
+    let hres,ares;
+    if(m.hg>m.awg)      { h.w++; h.pts+=3; a.l++; hres='W'; ares='L'; }
+    else if(m.hg<m.awg) { a.w++; a.pts+=3; h.l++; hres='L'; ares='W'; }
+    else                 { h.d++; h.pts++;  a.d++; a.pts++; hres='D'; ares='D'; }
+    logIt(m.home,m.date,hres,'home');
+    logIt(m.away,m.date,ares,'away');
   }
+  // last 5 results oldest->newest for a given log array (chronological by date, stable)
+  const form=arr=>arr.slice().sort((x,y)=>(x.date<y.date?-1:x.date>y.date?1:0))
+                      .slice(-5).map(e=>e.res).join('');
   const names=[...new Set([...Object.keys(home),...Object.keys(away)])];
   return names.map(name=>{
     const h=home[name]||mk(), a=away[name]||mk();
@@ -2034,7 +2052,9 @@ function calcTable(ag, season, division) {
     const t={pl:h.pl+a.pl, w:h.w+a.w, d:h.d+a.d, l:h.l+a.l,
              gf:h.gf+a.gf, ga:h.ga+a.ga, pts:h.pts+a.pts};
     t.gd=t.gf-t.ga;
-    return {name,h,a,t};
+    const lg=log[name]||{home:[],away:[],all:[]};
+    const fm={t:form(lg.all), h:form(lg.home), a:form(lg.away)};
+    return {name,h,a,t,fm};
   }).sort((x,y)=>y.t.pts-x.t.pts||y.t.gd-x.t.gd||y.t.gf-x.t.gf||x.name.localeCompare(y.name));
 }
 
@@ -2044,6 +2064,15 @@ function gdCell(v){
 }
 function statCols(s){
   return `<td class="c">${s.pl}</td><td class="c">${s.w}</td><td class="c">${s.d}</td><td class="c">${s.l}</td><td class="c">${s.gf}</td><td class="c">${s.ga}</td>${gdCell(s.gd)}<td class="c pts">${s.pts}</td>`;
+}
+function formCell(f){
+  if(!f) return '<td></td>';
+  let p='';
+  for(const c of f){
+    const cl=c==='W'?'fp-w':c==='D'?'fp-d':'fp-l';
+    p+=`<span class="fp ${cl}">${c}</span>`;
+  }
+  return `<td><div class="form-cell">${p}</div></td>`;
 }
 
 function renderTable() {
@@ -2064,16 +2093,18 @@ function renderTable() {
        `<th colspan="8" style="text-align:center;border-bottom:1px solid #d4e8d4">Total</th></tr>`+
        `<tr>${cols}${cols}${cols}</tr>`;
   } else {
-    h+=`<tr><th class="c">Pos</th><th>Team</th>${cols}</tr>`;
+    const formHdr = view==='detailed' ? '' :
+      '<th>Form <span style="font-size:10px;font-weight:400;color:#888">(last 5)</span></th>';
+    h+=`<tr><th class="c">Pos</th><th>Team</th>${cols}${formHdr}</tr>`;
   }
   h+='</thead><tbody>';
 
   rows.forEach((r,i)=>{
     const cls=i===0?'pos-1':i===1?'pos-2':i===2?'pos-3':'';
     h+=`<tr class="${cls}"><td class="pos">${i+1}</td><td>${esc(r.name)}</td>`;
-    if(view==='summary')   h+=statCols(r.t);
-    else if(view==='home') h+=statCols(r.h);
-    else if(view==='away') h+=statCols(r.a);
+    if(view==='summary')   h+=statCols(r.t)+formCell(r.fm.t);
+    else if(view==='home') h+=statCols(r.h)+formCell(r.fm.h);
+    else if(view==='away') h+=statCols(r.a)+formCell(r.fm.a);
     else if(view==='detailed') h+=statCols(r.h)+statCols(r.a)+statCols(r.t);
     h+='</tr>';
   });
